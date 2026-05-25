@@ -1,3 +1,24 @@
+<!--
+  ========================================
+  Edit Task Page
+  ========================================
+  Extends base.html and renders a pre-filled form to edit a task.
+  
+  Fields:
+    - title (text input, pre-filled with current title)
+    - description (textarea, pre-filled with current description)
+  
+  Validation:
+    - Title is required (server-side check)
+    - Empty/whitespace-only titles are rejected
+  
+  Security:
+    - Ownership is enforced in the route handler
+    - Only the task owner can access this page
+  
+  On success: redirects to dashboard with success message.
+  ========================================
+-->
 {% extends "base.html" %}
 {% block title %}Edit Task{% endblock %}
 {% block content %}
@@ -8,13 +29,16 @@
                 <h4>Edit Task</h4>
             </div>
             <div class="card-body">
+                <!-- Task edit form (POST to same URL) -->
                 <form method="POST">
                     <div class="mb-3">
                         <label for="title" class="form-label">Task Title</label>
+                        <!-- Pre-filled with current task title -->
                         <input type="text" class="form-control" id="title" name="title" value="{{ task.title }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
+                        <!-- Pre-filled with current task description -->
                         <textarea class="form-control" id="description" name="description" rows="3">{{ task.description or '' }}</textarea>
                     </div>
                     <button type="submit" class="btn btn-warning w-100">Update Task</button>

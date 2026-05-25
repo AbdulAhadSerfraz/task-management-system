@@ -1,13 +1,37 @@
+<!--
+  ========================================
+  Registration Page
+  ========================================
+  Extends base.html and renders a registration form.
+  
+  Fields:
+    - username (text input)
+    - email (email input)
+    - password (password input)
+    - confirm_password (password input)
+  
+  Validation (server-side):
+    - All fields required
+    - Passwords must match
+    - Password minimum 6 characters
+    - Username and email must be unique
+  
+  On success: redirects to login page with success message.
+  On failure: shows error flash message.
+  ========================================
+-->
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
 {% block content %}
 <div class="row justify-content-center mt-5">
     <div class="col-md-4">
         <div class="card">
+            <!-- Card header with brand color -->
             <div class="card-header bg-success text-white text-center">
                 <h4>Register</h4>
             </div>
             <div class="card-body">
+                <!-- Registration form (POST to same URL) -->
                 <form method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
@@ -27,6 +51,7 @@
                     </div>
                     <button type="submit" class="btn btn-success w-100">Register</button>
                 </form>
+                <!-- Link to login for existing users -->
                 <div class="text-center mt-3">
                     <a href="{{ url_for('auth.login') }}">Already have an account? Login</a>
                 </div>

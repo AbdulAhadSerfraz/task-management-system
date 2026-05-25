@@ -1,8 +1,17 @@
+/* ========================================
+   Task Management System - Custom Styles
+   ========================================
+   Provides gradient background, card styling,
+   hover effects, and responsive adjustments.
+   ======================================== */
+
+/* ---- Page Background ---- */
 body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
 }
 
+/* ---- Card Styling ---- */
 .card {
     border: none;
     border-radius: 1rem;
@@ -13,10 +22,12 @@ body {
     border-radius: 1rem 1rem 0 0 !important;
 }
 
+/* ---- Navigation Bar ---- */
 .navbar {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* ---- Task Cards ---- */
 .task-card {
     transition: transform 0.2s;
 }
@@ -25,15 +36,18 @@ body {
     transform: translateY(-2px);
 }
 
+/* ---- Completed Task Styling ---- */
 .completed-task {
     opacity: 0.7;
     text-decoration: line-through;
 }
 
+/* ---- Flash Messages ---- */
 .alert {
     border-radius: 0.5rem;
 }
 
+/* ---- Buttons ---- */
 .btn {
     border-radius: 0.5rem;
 }

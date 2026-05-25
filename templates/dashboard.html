@@ -1,31 +1,63 @@
+<!--
+  ========================================
+  Dashboard Page
+  ========================================
+  Extends base.html and displays the user's task list.
+  
+  Features:
+    - "New Task" button at the top
+    - Task cards in a responsive grid (3 columns on large screens)
+    - Each card shows: title, description, status badge, date
+    - Action buttons: Complete/Undo, Edit, Delete
+    - Completed tasks are visually dimmed with strikethrough
+    - Empty state: shows friendly message with "Create Task" button
+  ========================================
+-->
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
+
+<!-- Page Header with New Task button -->
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>My Tasks</h2>
     <a href="{{ url_for('task.create_task') }}" class="btn btn-primary">+ New Task</a>
 </div>
 
 {% if tasks %}
+    <!-- Task Cards Grid -->
     <div class="row">
         {% for task in tasks %}
             <div class="col-md-4 mb-3">
+                <!-- Task card: dimmed if completed -->
                 <div class="card task-card {% if task.completed %}completed-task{% endif %}">
                     <div class="card-body">
+                        <!-- Task title -->
                         <h5 class="card-title">{{ task.title }}</h5>
+                        <!-- Task description (or placeholder) -->
                         <p class="card-text">{{ task.description or 'No description' }}</p>
+
+                        <!-- Status Badge and Date -->
                         <div class="mb-2">
                             <span class="badge {% if task.completed %}bg-success{% else %}bg-warning{% endif %}">
                                 {{ 'Completed' if task.completed else 'Pending' }}
                             </span>
                             <small class="text-muted ms-2">{{ task.created_at.strftime('%Y-%m-%d') }}</small>
                         </div>
+
+                        <!-- Action Buttons -->
                         <div class="d-flex gap-2">
-                            <a href="{{ url_for('task.complete_task', task_id=task.id) }}" class="btn btn-sm {% if task.completed %}btn-secondary{% else %}btn-success{% endif %}">
+                            <!-- Toggle complete/undo -->
+                            <a href="{{ url_for('task.complete_task', task_id=task.id) }}" 
+                               class="btn btn-sm {% if task.completed %}btn-secondary{% else %}btn-success{% endif %}">
                                 {{ 'Undo' if task.completed else 'Complete' }}
                             </a>
-                            <a href="{{ url_for('task.edit_task', task_id=task.id) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <a href="{{ url_for('task.delete_task', task_id=task.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this task?')">Delete</a>
+                            <!-- Edit task -->
+                            <a href="{{ url_for('task.edit_task', task_id=task.id) }}" 
+                               class="btn btn-sm btn-warning">Edit</a>
+                            <!-- Delete task (with confirmation) -->
+                            <a href="{{ url_for('task.delete_task', task_id=task.id) }}" 
+                               class="btn btn-sm btn-danger" 
+                               onclick="return confirm('Delete this task?')">Delete</a>
                         </div>
                     </div>
                 </div>
@@ -33,6 +65,7 @@
         {% endfor %}
     </div>
 {% else %}
+    <!-- Empty State: shown when user has no tasks -->
     <div class="text-center mt-5">
         <h4 class="text-muted">No tasks yet</h4>
         <p>Create your first task to get started!</p>

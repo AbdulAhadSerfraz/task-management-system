@@ -1,3 +1,21 @@
+<!--
+  ========================================
+  Create Task Page
+  ========================================
+  Extends base.html and renders a form to create a new task.
+  
+  Fields:
+    - title (text input, required)
+    - description (textarea, optional)
+  
+  Validation:
+    - Title is required (server-side check)
+    - Empty/whitespace-only titles are rejected
+  
+  On success: redirects to dashboard with success message.
+  On failure: shows error flash message and stays on form.
+  ========================================
+-->
 {% extends "base.html" %}
 {% block title %}Create Task{% endblock %}
 {% block content %}
@@ -8,6 +26,7 @@
                 <h4>Create New Task</h4>
             </div>
             <div class="card-body">
+                <!-- Task creation form (POST to same URL) -->
                 <form method="POST">
                     <div class="mb-3">
                         <label for="title" class="form-label">Task Title</label>

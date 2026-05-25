@@ -1,13 +1,31 @@
+<!--
+  ========================================
+  Login Page
+  ========================================
+  Extends base.html and renders a login form.
+  
+  Fields:
+    - username (text input)
+    - password (password input)
+  
+  On success: redirects to dashboard.
+  On failure: shows error flash message.
+  
+  Link to: Registration page (for new users).
+  ========================================
+-->
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block content %}
 <div class="row justify-content-center mt-5">
     <div class="col-md-4">
         <div class="card">
+            <!-- Card header with brand color -->
             <div class="card-header bg-primary text-white text-center">
                 <h4>Login</h4>
             </div>
             <div class="card-body">
+                <!-- Login form (POST to same URL) -->
                 <form method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
@@ -19,6 +37,7 @@
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Login</button>
                 </form>
+                <!-- Link to registration for new users -->
                 <div class="text-center mt-3">
                     <a href="{{ url_for('auth.register') }}">Don't have an account? Register</a>
                 </div>
