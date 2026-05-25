@@ -9,3 +9,4 @@ venv/
 
 # Track screenshots (not ignored)
 !screenshots/
+PROJECT_DOCUMENTATION.md
