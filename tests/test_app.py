@@ -178,3 +178,54 @@ class TestTask:
             'description': 'Updated Desc'
         }, follow_redirects=True)
         assert response.status_code == 200
+
+    def test_create_task_with_priority(self, client):
+        register_user(client)
+        login_user(client)
+        response = client.post('/tasks/create', data={
+            'title': 'Priority Task',
+            'description': 'High priority',
+            'priority': 'high',
+            'category': 'Work'
+        }, follow_redirects=True)
+        assert response.status_code == 200
+
+    def test_create_task_with_due_date(self, client):
+        register_user(client)
+        login_user(client)
+        response = client.post('/tasks/create', data={
+            'title': 'Task with Due Date',
+            'description': 'Test',
+            'due_date': '2025-12-31'
+        }, follow_redirects=True)
+        assert response.status_code == 200
+
+    def test_search_tasks(self, client):
+        register_user(client)
+        login_user(client)
+        client.post('/tasks/create', data={
+            'title': 'Searchable Task',
+            'description': 'Unique description'
+        })
+        response = client.get('/dashboard?search=Searchable', follow_redirects=True)
+        assert response.status_code == 200
+
+    def test_filter_by_category(self, client):
+        register_user(client)
+        login_user(client)
+        client.post('/tasks/create', data={
+            'title': 'Work Task',
+            'category': 'Work'
+        })
+        response = client.get('/dashboard?category=Work', follow_redirects=True)
+        assert response.status_code == 200
+
+    def test_filter_by_status(self, client):
+        register_user(client)
+        login_user(client)
+        client.post('/tasks/create', data={
+            'title': 'Pending Task',
+            'description': 'Test'
+        })
+        response = client.get('/dashboard?status=pending', follow_redirects=True)
+        assert response.status_code == 200

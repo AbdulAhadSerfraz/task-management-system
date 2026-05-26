@@ -10,4 +10,7 @@ class Task(db.Model):
     description = db.Column(db.Text, nullable=True)
     completed = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    due_date = db.Column(db.DateTime, nullable=True)
+    priority = db.Column(db.String(20), default='medium')
+    category = db.Column(db.String(50), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
