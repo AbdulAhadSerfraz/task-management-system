@@ -42,7 +42,7 @@
 {% if tasks %}
 <div class="task-grid">
   {% for task in tasks %}
-  <div class="task-card {% if task.completed %}completed{% endif %}" style="--card-index: {{ loop.index0 }}">
+  <div class="task-card {% if task.completed %}completed{% endif %}" style="--card-index: {{ loop.index0 }}" data-task-id="{{ task.id }}">
     <div class="task-date">
       <i class="ph-bold ph-calendar-blank"></i>
       <span>{{ task.created_at.strftime('%b %d, %Y') }}</span>

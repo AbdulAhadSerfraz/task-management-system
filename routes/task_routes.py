@@ -87,8 +87,12 @@ def create_task():
         db.session.add(task)
         db.session.commit()
 
+        task_count = Task.query.filter_by(user_id=current_user.id).count()
         flash('Task created successfully!', 'success')
-        return redirect(url_for('task.dashboard'))
+        redirect_url = url_for('task.dashboard')
+        if task_count == 1:
+            redirect_url += '?created=1'
+        return redirect(redirect_url)
 
     return render_template('create_task.html')
 
@@ -177,4 +181,4 @@ def complete_task(task_id):
     db.session.commit()
 
     flash('Task status updated!', 'success')
-    return redirect(url_for('task.dashboard'))
+    return redirect(url_for('task.dashboard', completed=task.id))
