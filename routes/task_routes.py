@@ -19,6 +19,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from extensions import db
 from models.task import Task
+from datetime import datetime
 
 # Create the task management blueprint
 task_bp = Blueprint('task', __name__)
@@ -29,11 +30,29 @@ task_bp = Blueprint('task', __name__)
 def dashboard():
     """Display all tasks belonging to the logged-in user.
 
+    Supports search, category filtering, and status filtering.
     Tasks are ordered by creation date (newest first).
-    The template renders each task as a card with action buttons.
     """
-    tasks = Task.query.filter_by(user_id=current_user.id).order_by(Task.created_at.desc()).all()
-    return render_template('dashboard.html', tasks=tasks)
+    search_query = request.args.get('search', '')
+    category_filter = request.args.get('category', '')
+    status_filter = request.args.get('status', '')
+
+    query = Task.query.filter_by(user_id=current_user.id)
+
+    if search_query:
+        query = query.filter(Task.title.contains(search_query) | Task.description.contains(search_query))
+
+    if category_filter:
+        query = query.filter_by(category=category_filter)
+
+    if status_filter == 'completed':
+        query = query.filter_by(completed=True)
+    elif status_filter == 'pending':
+        query = query.filter_by(completed=False)
+
+    tasks = query.order_by(Task.created_at.desc()).all()
+    return render_template('dashboard.html', tasks=tasks, search_query=search_query,
+                          category_filter=category_filter, status_filter=status_filter)
 
 
 @task_bp.route('/tasks/create', methods=['GET', 'POST'])
@@ -47,19 +66,33 @@ def create_task():
     if request.method == 'POST':
         title = request.form.get('title')
         description = request.form.get('description')
+        priority = request.form.get('priority', 'medium')
+        category = request.form.get('category')
+        due_date = request.form.get('due_date')
 
         # Validation: title cannot be empty
         if not title or not title.strip():
             flash('Task title is required', 'danger')
             return render_template('create_task.html')
 
-        # Create and save the new task (assigned to current user)
-        task = Task(title=title.strip(), description=description, user_id=current_user.id)
+        task = Task(
+            title=title.strip(),
+            description=description,
+            priority=priority,
+            category=category,
+            user_id=current_user.id
+        )
+        if due_date:
+            task.due_date = datetime.strptime(due_date, '%Y-%m-%d')
         db.session.add(task)
         db.session.commit()
 
+        task_count = Task.query.filter_by(user_id=current_user.id).count()
         flash('Task created successfully!', 'success')
-        return redirect(url_for('task.dashboard'))
+        redirect_url = url_for('task.dashboard')
+        if task_count == 1:
+            redirect_url += '?created=1'
+        return redirect(redirect_url)
 
     return render_template('create_task.html')
 
@@ -84,6 +117,9 @@ def edit_task(task_id):
     if request.method == 'POST':
         title = request.form.get('title')
         description = request.form.get('description')
+        priority = request.form.get('priority', 'medium')
+        category = request.form.get('category')
+        due_date = request.form.get('due_date')
 
         if not title or not title.strip():
             flash('Task title is required', 'danger')
@@ -91,6 +127,12 @@ def edit_task(task_id):
 
         task.title = title.strip()
         task.description = description
+        task.priority = priority
+        task.category = category
+        if due_date:
+            task.due_date = datetime.strptime(due_date, '%Y-%m-%d')
+        else:
+            task.due_date = None
         db.session.commit()
 
         flash('Task updated successfully!', 'success')
@@ -139,4 +181,4 @@ def complete_task(task_id):
     db.session.commit()
 
     flash('Task status updated!', 'success')
-    return redirect(url_for('task.dashboard'))
+    return redirect(url_for('task.dashboard', completed=task.id))

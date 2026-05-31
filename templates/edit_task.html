@@ -1,50 +1,53 @@
-<!--
-  ========================================
-  Edit Task Page
-  ========================================
-  Extends base.html and renders a pre-filled form to edit a task.
-  
-  Fields:
-    - title (text input, pre-filled with current title)
-    - description (textarea, pre-filled with current description)
-  
-  Validation:
-    - Title is required (server-side check)
-    - Empty/whitespace-only titles are rejected
-  
-  Security:
-    - Ownership is enforced in the route handler
-    - Only the task owner can access this page
-  
-  On success: redirects to dashboard with success message.
-  ========================================
--->
 {% extends "base.html" %}
-{% block title %}Edit Task{% endblock %}
+{% block title %}Edit Task{% endblock title %}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-warning">
-                <h4>Edit Task</h4>
-            </div>
-            <div class="card-body">
-                <!-- Task edit form (POST to same URL) -->
-                <form method="POST">
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Task Title</label>
-                        <!-- Pre-filled with current task title -->
-                        <input type="text" class="form-control" id="title" name="title" value="{{ task.title }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <!-- Pre-filled with current task description -->
-                        <textarea class="form-control" id="description" name="description" rows="3">{{ task.description or '' }}</textarea>
-                    </div>
-                    <button type="submit" class="btn btn-warning w-100">Update Task</button>
-                </form>
-            </div>
-        </div>
+
+<div class="form-card">
+  <a href="{{ url_for('task.dashboard') }}" class="back-link">
+    <i class="ph-bold ph-arrow-left"></i>
+    Back to dashboard
+  </a>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Edit Task</h2>
+      <p class="text-secondary text-sm">Update task details</p>
     </div>
+    <div class="card-body">
+      <form method="POST">
+        <div class="form-group">
+          <label class="form-label" for="title">Task Title</label>
+          <input type="text" class="form-input" id="title" name="title" value="{{ task.title }}" required autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="description">Description</label>
+          <textarea class="form-textarea" id="description" name="description" rows="3">{{ task.description or '' }}</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="priority">Priority</label>
+          <select class="form-select" id="priority" name="priority">
+            <option value="low" {% if task.priority == 'low' %}selected{% endif %}>Low</option>
+            <option value="medium" {% if task.priority == 'medium' %}selected{% endif %}>Medium</option>
+            <option value="high" {% if task.priority == 'high' %}selected{% endif %}>High</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="category">Category</label>
+          <input type="text" class="form-input" id="category" name="category" value="{{ task.category or '' }}" placeholder="e.g. Work, Personal">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="due_date">Due Date</label>
+          <input type="date" class="form-input" id="due_date" name="due_date" value="{{ task.due_date.strftime('%Y-%m-%d') if task.due_date else '' }}">
+        </div>
+        <div class="form-actions">
+          <a href="{{ url_for('task.dashboard') }}" class="btn btn-ghost">Cancel</a>
+          <button type="submit" class="btn btn-primary">
+            <i class="ph-bold ph-check"></i>Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
-{% endblock %}
+
+{% endblock content %}

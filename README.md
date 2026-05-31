@@ -1,6 +1,6 @@
 # Task Management System
 
-A web-based Task Management System built with **Python Flask**, **SQLite**, and **Bootstrap 5**. Features user authentication, full task CRUD operations, and a responsive dashboard.
+A web-based Task Management System built with **Flask**, **SQLite**, and a custom design system. Features user authentication, full task CRUD operations, search/filter, and a responsive dashboard with polished UI interactions.
 
 ---
 
@@ -23,11 +23,16 @@ A web-based Task Management System built with **Python Flask**, **SQLite**, and 
 - Create, Read, Update, Delete tasks
 - Mark tasks as Complete / Pending (toggle)
 - Task ownership enforcement (users only see their own tasks)
-- Responsive Bootstrap 5 UI with gradient styling
+- Custom design system (Geist typeface, Phosphor icons, intentional spacing/typography)
+- Completion animations, first-task confetti, textarea auto-resize
+- Keyboard shortcut (Cmd+Enter to submit forms)
+- Responsive layout with mobile breakpoints
+- WCAG AA contrast-targeted colors
+- Search, category, and status filtering
 - Server-side input validation
 - Flash messages for user feedback
 - SQLite database (no external DB setup needed)
-- 16 PyTest unit tests (auth + CRUD)
+- 21 PyTest unit tests (auth + CRUD)
 
 ---
 
@@ -37,7 +42,7 @@ A web-based Task Management System built with **Python Flask**, **SQLite**, and 
 |-------|-----------|
 | Backend | Python 3 + Flask |
 | Database | SQLite (via SQLAlchemy ORM) |
-| Frontend | HTML5, CSS3, Bootstrap 5 |
+| Frontend | HTML5, CSS3, custom design system (Geist, Phosphor Icons) |
 | Auth | Flask-Login + Werkzeug hashing |
 | Testing | PyTest |
 | Version Control | Git & GitHub |
@@ -69,7 +74,7 @@ python app.py
 pytest tests/ -v
 ```
 
-Expected output: **16 passed**
+Expected output: **21 passed**
 
 ---
 
@@ -80,6 +85,7 @@ task-management-system/
 ├── app.py               # Flask application factory
 ├── config.py            # Configuration settings
 ├── extensions.py        # Flask extensions (db, login_manager)
+├── PRODUCT.md           # Product design brief
 ├── requirements.txt     # Python dependencies
 ├── .gitignore
 ├── README.md
@@ -97,21 +103,25 @@ task-management-system/
 │   ├── auth_routes.py   # Login/Register/Logout
 │   └── task_routes.py   # Task CRUD operations
 ├── templates/
-│   ├── base.html        # Base layout (Bootstrap)
+│   ├── base.html        # Base layout
 │   ├── login.html       # Login form
 │   ├── register.html    # Registration form
 │   ├── dashboard.html   # Task dashboard
 │   ├── create_task.html # Create task form
 │   └── edit_task.html   # Edit task form
 ├── static/
-│   └── css/
-│       └── style.css    # Custom styles
+│   ├── css/
+│   │   └── style.css    # Custom design system
+│   └── js/
+│       └── delight.js   # UI interactions and animations
 ├── tests/
 │   ├── __init__.py
-│   └── test_app.py      # 16 PyTest tests
+│   └── test_app.py      # 21 PyTest tests
 └── utils/
     └── __init__.py
 ```
+
+> **Note:** The UI uses a custom-built design system, not a third-party framework. Typography uses Geist (sans) and Geist Mono. Icons are from Phosphor Icons. All styling is hand-crafted in `style.css`.
 
 ---
 
