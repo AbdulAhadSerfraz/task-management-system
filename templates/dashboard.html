@@ -1,108 +1,103 @@
-<!--
-  ========================================
-  Dashboard Page
-  ========================================
-  Extends base.html and displays the user's task list.
-  
-  Features:
-    - "New Task" button at the top
-    - Task cards in a responsive grid (3 columns on large screens)
-    - Each card shows: title, description, status badge, date
-    - Action buttons: Complete/Undo, Edit, Delete
-    - Completed tasks are visually dimmed with strikethrough
-    - Empty state: shows friendly message with "Create Task" button
-  ========================================
--->
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard{% endblock title %}
 {% block content %}
 
-<!-- Page Header with New Task button -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>My Tasks</h2>
-    <a href="{{ url_for('task.create_task') }}" class="btn btn-primary">+ New Task</a>
+<div class="page-header">
+  <h1>My Tasks</h1>
+  <a href="{{ url_for('task.create_task') }}" class="btn btn-primary">
+    <i class="ph-bold ph-plus"></i>
+    New Task
+  </a>
 </div>
 
-<div class="row mb-3">
-    <div class="col-md-12">
-        <form method="GET" class="d-flex gap-2 flex-wrap">
-            <input type="text" class="form-control" name="search" placeholder="Search tasks..." value="{{ search_query }}" style="max-width: 200px;">
-            <select class="form-select" name="category" style="max-width: 150px;">
-                <option value="">All Categories</option>
-                <option value="Work" {% if category_filter == 'Work' %}selected{% endif %}>Work</option>
-                <option value="Personal" {% if category_filter == 'Personal' %}selected{% endif %}>Personal</option>
-                <option value="Shopping" {% if category_filter == 'Shopping' %}selected{% endif %}>Shopping</option>
-                <option value="Other" {% if category_filter == 'Other' %}selected{% endif %}>Other</option>
-            </select>
-            <select class="form-select" name="status" style="max-width: 150px;">
-                <option value="">All Status</option>
-                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
-                <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
-            </select>
-            <button type="submit" class="btn btn-outline-secondary">Filter</button>
-            <a href="{{ url_for('task.dashboard') }}" class="btn btn-outline-secondary">Clear</a>
-        </form>
-    </div>
-</div>
+<form method="GET" class="filter-bar">
+  <div class="filter-group">
+    <label for="search">Search</label>
+    <input type="text" class="form-input" id="search" name="search" placeholder="Search tasks..." value="{{ search_query }}" style="min-width:180px">
+  </div>
+  <div class="filter-group">
+    <label for="category">Category</label>
+    <select class="form-select" id="category" name="category" style="min-width:140px">
+      <option value="">All</option>
+      <option value="Work" {% if category_filter == 'Work' %}selected{% endif %}>Work</option>
+      <option value="Personal" {% if category_filter == 'Personal' %}selected{% endif %}>Personal</option>
+      <option value="Shopping" {% if category_filter == 'Shopping' %}selected{% endif %}>Shopping</option>
+      <option value="Other" {% if category_filter == 'Other' %}selected{% endif %}>Other</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label for="status">Status</label>
+    <select class="form-select" id="status" name="status" style="min-width:140px">
+      <option value="">All</option>
+      <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+      <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+    </select>
+  </div>
+  <div class="filter-actions">
+    <button type="submit" class="btn btn-primary"><i class="ph-bold ph-funnel"></i>Filter</button>
+    <a href="{{ url_for('task.dashboard') }}" class="btn btn-ghost"><i class="ph-bold ph-x"></i>Clear</a>
+  </div>
+</form>
 
 {% if tasks %}
-    <!-- Task Cards Grid -->
-    <div class="row">
-        {% for task in tasks %}
-            <div class="col-md-4 mb-3">
-                <!-- Task card: dimmed if completed -->
-                <div class="card task-card {% if task.completed %}completed-task{% endif %}">
-                    <div class="card-body">
-                        <!-- Task title -->
-                        <h5 class="card-title">{{ task.title }}</h5>
-                        <!-- Task description (or placeholder) -->
-                        <p class="card-text">{{ task.description or 'No description' }}</p>
-
-                        <!-- Status Badge and Date -->
-                        <div class="mb-2">
-                            <span class="badge {% if task.completed %}bg-success{% else %}bg-warning{% endif %}">
-                                {{ 'Completed' if task.completed else 'Pending' }}
-                            </span>
-                            {% if task.priority %}
-                                <span class="badge {% if task.priority == 'high' %}bg-danger{% elif task.priority == 'low' %}bg-info{% else %}bg-secondary{% endif %}">{{ task.priority|capitalize }} Priority</span>
-                            {% endif %}
-                            {% if task.category %}
-                                <span class="badge bg-primary">{{ task.category }}</span>
-                            {% endif %}
-                        </div>
-                        <div class="mb-2">
-                            <small class="text-muted">Created: {{ task.created_at.strftime('%Y-%m-%d') }}</small>
-                            {% if task.due_date %}
-                                <small class="text-muted ms-2">Due: {{ task.due_date.strftime('%Y-%m-%d') }}</small>
-                            {% endif %}
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="d-flex gap-2">
-                            <!-- Toggle complete/undo -->
-                            <a href="{{ url_for('task.complete_task', task_id=task.id) }}" 
-                               class="btn btn-sm {% if task.completed %}btn-secondary{% else %}btn-success{% endif %}">
-                                {{ 'Undo' if task.completed else 'Complete' }}
-                            </a>
-                            <!-- Edit task -->
-                            <a href="{{ url_for('task.edit_task', task_id=task.id) }}" 
-                               class="btn btn-sm btn-warning">Edit</a>
-                            <!-- Delete task (with confirmation) -->
-                            <a href="{{ url_for('task.delete_task', task_id=task.id) }}" 
-                               class="btn btn-sm btn-danger" 
-                               onclick="return confirm('Delete this task?')">Delete</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
+<div class="task-grid">
+  {% for task in tasks %}
+  <div class="task-card {% if task.completed %}completed{% endif %}" style="--card-index: {{ loop.index0 }}">
+    <div class="task-date">
+      <i class="ph-bold ph-calendar-blank"></i>
+      <span>{{ task.created_at.strftime('%b %d, %Y') }}</span>
+      {% if task.due_date %}
+      <span class="task-date-due">{{ task.due_date.strftime('%b %d') }}</span>
+      {% endif %}
     </div>
+    <h3 class="task-title">{{ task.title }}</h3>
+    {% if task.description %}
+    <p class="task-desc">{{ task.description }}</p>
+    {% endif %}
+    <div class="task-meta">
+      {% if task.completed %}
+      <span class="badge badge-green"><i class="ph-bold ph-check"></i>Done</span>
+      {% else %}
+      <span class="badge badge-neutral">Pending</span>
+      {% endif %}
+      {% if task.priority == 'high' %}
+      <span class="badge badge-red">{{ task.priority }}</span>
+      {% elif task.priority == 'low' %}
+      <span class="badge badge-yellow">{{ task.priority }}</span>
+      {% else %}
+      <span class="badge badge-neutral">{{ task.priority }}</span>
+      {% endif %}
+      {% if task.category %}
+      <span class="badge badge-blue">{{ task.category }}</span>
+      {% endif %}
+    </div>
+    <div class="task-footer">
+      <a href="{{ url_for('task.complete_task', task_id=task.id) }}"
+         class="btn btn-sm {% if task.completed %}btn-ghost{% else %}btn-success{% endif %}">
+        <i class="ph-bold ph-{{ 'check-circle' if not task.completed else 'arrow-counter-clockwise' }}"></i>
+        {{ 'Complete' if not task.completed else 'Undo' }}
+      </a>
+      <a href="{{ url_for('task.edit_task', task_id=task.id) }}" class="btn btn-sm btn-ghost">
+        <i class="ph-bold ph-pencil"></i>Edit
+      </a>
+      <a href="{{ url_for('task.delete_task', task_id=task.id) }}"
+         class="btn btn-sm btn-danger"
+         onclick="return confirm('Delete this task?')">
+        <i class="ph-bold ph-trash"></i>Delete
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
 {% else %}
-    <!-- Empty State: shown when user has no tasks -->
-    <div class="text-center mt-5">
-        <h4 class="text-muted">No tasks yet</h4>
-        <p>Create your first task to get started!</p>
-        <a href="{{ url_for('task.create_task') }}" class="btn btn-primary">Create Task</a>
-    </div>
+<div class="empty-state">
+  <i class="ph-bold ph-clipboard-text"></i>
+  <h3>No tasks yet</h3>
+  <p>Create your first task to get started with managing your work.</p>
+  <a href="{{ url_for('task.create_task') }}" class="btn btn-primary">
+    <i class="ph-bold ph-plus"></i>Create Task
+  </a>
+</div>
 {% endif %}
-{% endblock %}
+
+{% endblock content %}

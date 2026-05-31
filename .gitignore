@@ -7,6 +7,9 @@ venv/
 *.egg-info/
 .pytest_cache/
 
+*.log
+nul
+
 # Track screenshots (not ignored)
 !screenshots/
 PROJECT_DOCUMENTATION.md

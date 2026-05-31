@@ -1,62 +1,43 @@
-<!--
-  ========================================
-  Registration Page
-  ========================================
-  Extends base.html and renders a registration form.
-  
-  Fields:
-    - username (text input)
-    - email (email input)
-    - password (password input)
-    - confirm_password (password input)
-  
-  Validation (server-side):
-    - All fields required
-    - Passwords must match
-    - Password minimum 6 characters
-    - Username and email must be unique
-  
-  On success: redirects to login page with success message.
-  On failure: shows error flash message.
-  ========================================
--->
 {% extends "base.html" %}
-{% block title %}Register{% endblock %}
+{% block title %}Register{% endblock title %}
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-4">
-        <div class="card">
-            <!-- Card header with brand color -->
-            <div class="card-header bg-success text-white text-center">
-                <h4>Register</h4>
-            </div>
-            <div class="card-body">
-                <!-- Registration form (POST to same URL) -->
-                <form method="POST">
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="confirm_password" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-                    </div>
-                    <button type="submit" class="btn btn-success w-100">Register</button>
-                </form>
-                <!-- Link to login for existing users -->
-                <div class="text-center mt-3">
-                    <a href="{{ url_for('auth.login') }}">Already have an account? Login</a>
-                </div>
-            </div>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="card">
+      <div class="card-header">
+        <h2>Create account</h2>
+        <p>Start managing your tasks</p>
+      </div>
+      <div class="card-body">
+        <form method="POST">
+          <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            <input type="text" class="form-input" id="username" name="username" placeholder="Choose a username" required autofocus>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="email">Email</label>
+            <input type="email" class="form-input" id="email" name="email" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" class="form-input" id="password" name="password" placeholder="At least 6 characters" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="confirm_password">Confirm Password</label>
+            <input type="password" class="form-input" id="confirm_password" name="confirm_password" placeholder="Repeat your password" required>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary" style="width:100%">
+              <i class="ph-bold ph-user-plus"></i>
+              Create account
+            </button>
+          </div>
+        </form>
+        <div class="form-footer">
+          Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a>
         </div>
+      </div>
     </div>
+  </div>
 </div>
-{% endblock %}
+{% endblock content %}
