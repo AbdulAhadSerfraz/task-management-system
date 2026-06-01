@@ -341,6 +341,10 @@ a:hover {
   font-size: 1rem;
 }
 
+.btn-block {
+  width: 100%;
+}
+
 .btn-group {
   display: flex;
   gap: 6px;
@@ -740,6 +744,14 @@ a:focus-visible {
   position: relative;
   z-index: 1;
   animation: card-in 500ms ease both;
+}
+
+.auth-brand {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  font-size: 2rem;
+  color: var(--text);
+  line-height: 1;
 }
 
 /* --- Back Link ------------------------------------------------------------- */
