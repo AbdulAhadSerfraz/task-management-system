@@ -180,6 +180,7 @@ User opens browser → http://localhost:5000
 | **Abdul Ahad** | Project Lead (Structure, Factory, Integration) | `master` / `develop` |
 | **Abubakar** | Authentication Module (Login, Register, Session) | `feature-auth` |
 | **Rehan** | Task CRUD Module (Create, Edit, Delete, Complete) | `feature-task-crud` |
+| **Muhammad Issa** | Task Testing and Documentation | `feature-testing-docs` |
 | **Hassan Adeel** | UI + Testing + Documentation | `feature-ui-testing` |
 
 ---
